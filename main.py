@@ -212,7 +212,6 @@ if __name__ == "__main__":
         command = takeCommand()
         # To open a website through Friday
         sites = [["youtube", "https://youtube.com"], ["spotify", "https://open.spotify.com/"],
-                 ["the PS Website", "https://ps1.bits-pilani.in/login/index.php"],
                  ["linked in", "https://www.linkedin.com/feed/"], ["monkey type", "https://monkeytype.com/"]]
 
         for site in sites:
