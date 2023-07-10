@@ -17,11 +17,30 @@ from google.auth.transport.requests import Request
 from googleapiclient import errors
 import openai
 import pyautogui
+from pytube import YouTube
+import pywhatkit
 import os
 import time
 
 speaker = win32com.client.Dispatch("SAPI.SpVoice")
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]  # for gmail
+
+
+def yt(query):
+    if "on youtube play" in query.lower():
+        if "on youtube play" in query:
+            vid = query.replace("on youtube play ", "")
+        print(f'playing {vid}')
+        pywhatkit.playonyt(vid)
+    elif "download" in query:
+        say("Sir please enter the youtube video link which, you wish to download")
+        link = input("Enter the youtube video link: ")
+        yt1 = YouTube(link)
+        yt1.streams.get_highest_resolution().download()
+        say(f"Boss downloaded {yt1.title} from the link you given into the main folder")
+    elif 'youtube' in query:
+        say('opening youtube')
+        webbrowser.open('https://www.youtube.com/')
 
 
 def gmail_read():
@@ -64,7 +83,6 @@ def gmail_read():
         print('No messages found.')
         say('No messages found.')
     else:
-        m = ""
         # if email found
         say("{} new emails found".format(len(messages)))
         for message in messages:
@@ -100,7 +118,7 @@ def news_headlines():
         print("There was error some error while retrieving the news sir")
 
 
-def spotify(song_request):
+def spotify():
     say("What song should i play Sir?")
     song_name = takeCommand()
     webbrowser.open(f"https://open.spotify.com/search/{song_name}")
@@ -212,6 +230,7 @@ if __name__ == "__main__":
         command = takeCommand()
         # To open a website through Friday
         sites = [["youtube", "https://youtube.com"], ["spotify", "https://open.spotify.com/"],
+                 ["the PS Website", "https://ps1.bits-pilani.in/login/index.php"],
                  ["linked in", "https://www.linkedin.com/feed/"], ["monkey type", "https://monkeytype.com/"]]
 
         for site in sites:
@@ -221,11 +240,17 @@ if __name__ == "__main__":
 
         if "the time" in command:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")
+            print(f"Sir the time is {strTime}")
             say(f"Sir the time is {strTime}")
+
+        elif "day today" in command:
+            day = datetime.datetime.now().strftime("%A")
+            print(f"Today is {day}")
+            say(f"today is {day}")
 
         # To play music on spotify
         elif "spotify play".lower() in command.lower() or "can u play some song friday" in command.lower() or "play me a song" in command.lower():
-            spotify(command)
+            spotify()
 
         elif "using artificial intelligence" in command.lower():
             ai(prompt=command.lower())
@@ -236,6 +261,9 @@ if __name__ == "__main__":
 
         elif "news headlines" in command.lower():
             news_headlines()
+
+        elif "on youtube" in command.lower():
+            yt(command.lower())
 
         elif "read my mails" in command.lower():
             gmail_read()
